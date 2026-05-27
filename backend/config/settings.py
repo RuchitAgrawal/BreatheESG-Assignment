@@ -12,7 +12,8 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key-change-in-production-a
 DEBUG = os.environ.get("DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
-ALLOWED_HOSTS += ["*.railway.app", "*.up.railway.app"]
+# Django subdomain wildcard uses a leading dot, NOT *.domain.com syntax
+ALLOWED_HOSTS += [".railway.app", ".up.railway.app", "healthcheck.railway.app"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
