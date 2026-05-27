@@ -1,0 +1,76 @@
+{
+  "report_id": "RPT-2024-Q4",
+  "exported_at": "2024-12-01T09:00:00Z",
+  "trips": [
+    {
+      "trip_id": "T001",
+      "traveler_email": "john.smith@acme.com",
+      "segments": [
+        {
+          "type": "flight",
+          "departure_airport": "SFO",
+          "arrival_airport": "LHR",
+          "departure_date": "2024-11-14",
+          "class": "economy",
+          "distance_km": 8629
+        },
+        {
+          "type": "flight",
+          "departure_airport": "LHR",
+          "arrival_airport": "DXB",
+          "departure_date": "2024-11-15",
+          "class": "economy"
+        },
+        {
+          "type": "hotel",
+          "check_in": "2024-11-15",
+          "city": "Dubai",
+          "hotel_name": "Marriott Downtown Dubai",
+          "nights": 2
+        }
+      ]
+    },
+    {
+      "trip_id": "T002",
+      "traveler_email": "sarah.jones@acme.com",
+      "segments": [
+        {
+          "type": "flight",
+          "departure_airport": "JFK",
+          "arrival_airport": "BOS",
+          "departure_date": "2024-11-20",
+          "class": "economy",
+          "distance_km": 299
+        },
+        {
+          "type": "flight",
+          "departure_airport": "NRT",
+          "arrival_airport": "SIN",
+          "departure_date": "2024-11-22",
+          "class": "business"
+        }
+      ]
+    },
+    {
+      "trip_id": "T003",
+      "traveler_email": "amit.patel@acme.com",
+      "segments": [
+        {
+          "type": "flight",
+          "departure_airport": "CDG",
+          "arrival_airport": "AMS",
+          "departure_date": "2024-11-25",
+          "class": "economy",
+          "distance_km": 430
+        },
+        {
+          "type": "car",
+          "date": "2024-11-25",
+          "pickup_location": "Amsterdam Airport Schiphol",
+          "dropoff_location": "Amsterdam City Centre",
+          "transport_type": "car"
+        }
+      ]
+    }
+  ]
+}
