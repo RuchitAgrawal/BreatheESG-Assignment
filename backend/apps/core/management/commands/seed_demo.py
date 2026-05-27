@@ -24,7 +24,8 @@ from apps.ingestion.service import ingest_sap, ingest_utility, ingest_travel
 from apps.records.models import ActivityRecord
 
 
-FIXTURES_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent.parent / "fixtures"
+FIXTURES_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent / "fixtures"
+
 
 DEMO_ORGS = [
     {

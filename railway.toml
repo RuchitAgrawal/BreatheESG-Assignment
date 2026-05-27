@@ -1,8 +1,6 @@
-[build]
-builder = "nixpacks"
-
-[deploy]
-healthcheckPath = "/api/v1/health/"
-healthcheckTimeout = 30
-restartPolicyType = "on_failure"
-restartPolicyMaxRetries = 3
+# This file is intentionally minimal.
+# The active railway.toml is in backend/railway.toml
+# Railway root directory for this service must be set to: backend
+#
+# To set root directory in Railway:
+#   Service Settings -> Source -> Root Directory -> "backend"
