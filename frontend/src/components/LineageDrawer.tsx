@@ -1,8 +1,112 @@
+import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRecordLineage, useRecordRevisions } from '../api/hooks';
+import api from '../api/client';
 import type { ActivityRecordDetail } from '../api/types';
 
-function LineageSection({ detail }: { detail: ActivityRecordDetail }) {
+
+// ---- Inline quantity edit form (calls PATCH /records/{id}/) -----------------
+
+function EditQuantityForm({
+  recordId,
+  currentQuantity,
+  unit,
+  onDone,
+}: {
+  recordId: string;
+  currentQuantity: string;
+  unit: string;
+  onDone: () => void;
+}) {
+  const [value, setValue] = useState(currentQuantity);
+  const [reason, setReason] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const qc = useQC();
+
+  async function handleSave() {
+    const num = parseFloat(value);
+    if (isNaN(num) || num <= 0) {
+      setError('Enter a positive number.');
+      return;
+    }
+    setSaving(true);
+    setError('');
+    try {
+      await api.patch(`/records/${recordId}/`, {
+        quantity: value,
+        change_reason: reason || 'Analyst correction',
+      });
+      qc.invalidateQueries({ queryKey: ['record', recordId] });
+      qc.invalidateQueries({ queryKey: ['lineage', recordId] });
+      qc.invalidateQueries({ queryKey: ['records'] });
+      qc.invalidateQueries({ queryKey: ['revisions', recordId] });
+      onDone();
+    } catch {
+      setError('Save failed. Record may be locked or the server is unreachable.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div style={{
+      background: 'var(--color-surface-2)',
+      border: '1px solid var(--color-hairline-strong)',
+      borderRadius: 6,
+      padding: '12px 14px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 10,
+    }}>
+      <div className="text-xs" style={{ color: 'var(--color-ink-subtle)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+        Correct quantity
+      </div>
+      <div className="flex items-center gap-2">
+        <input
+          id="input-quantity-edit"
+          type="number"
+          step="any"
+          className="form-input"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          style={{ maxWidth: 140 }}
+        />
+        <span className="text-sm text-subtle">{unit}</span>
+      </div>
+      <input
+        id="input-change-reason"
+        type="text"
+        className="form-input"
+        placeholder="Reason for change (optional)"
+        value={reason}
+        onChange={(e) => setReason(e.target.value)}
+      />
+      {error && (
+        <div className="text-xs" style={{ color: 'var(--color-danger)' }}>{error}</div>
+      )}
+      <div className="flex gap-2">
+        <button
+          id="btn-save-quantity"
+          className="btn btn-primary btn-sm"
+          onClick={handleSave}
+          disabled={saving}
+        >
+          {saving ? <span className="spinner" style={{ width: 12, height: 12 }} /> : null}
+          {saving ? 'Saving...' : 'Save'}
+        </button>
+        <button className="btn btn-ghost btn-sm" onClick={onDone}>Cancel</button>
+      </div>
+    </div>
+  );
+}
+
+// ---- Main lineage section ----------------------------------------------------
+
+function LineageSection({ detail, recordId }: { detail: ActivityRecordDetail; recordId: string }) {
+  const [editing, setEditing] = useState(false);
   const calc = detail.calculations.find((c) => c.is_current);
+  const isLocked = detail.state === 'locked';
 
   return (
     <>
@@ -63,9 +167,24 @@ function LineageSection({ detail }: { detail: ActivityRecordDetail }) {
         )}
       </div>
 
-      {/* Normalization */}
+      {/* Normalization + quantity correction */}
       <div className="drawer-section">
-        <div className="drawer-section-title">Normalization</div>
+        <div className="drawer-section-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span>Normalization</span>
+          {!isLocked && !editing && (
+            <button
+              id="btn-edit-quantity"
+              className="btn btn-ghost btn-sm"
+              onClick={() => setEditing(true)}
+              style={{ fontSize: 11, padding: '2px 8px' }}
+            >
+              Correct quantity
+            </button>
+          )}
+          {isLocked && (
+            <span className="text-xs" style={{ color: 'var(--color-ink-tertiary)' }}>Locked</span>
+          )}
+        </div>
         <div className="lineage-row">
           <span className="lineage-label">Original</span>
           <span className="lineage-value">{detail.quantity} {detail.unit}</span>
@@ -82,6 +201,17 @@ function LineageSection({ detail }: { detail: ActivityRecordDetail }) {
           <span className="lineage-label">Scope</span>
           <span className="lineage-value">Scope {detail.scope}</span>
         </div>
+
+        {editing && (
+          <div style={{ marginTop: 8 }}>
+            <EditQuantityForm
+              recordId={recordId}
+              currentQuantity={detail.quantity}
+              unit={detail.unit}
+              onDone={() => setEditing(false)}
+            />
+          </div>
+        )}
       </div>
 
       {/* Emission calculation */}
@@ -109,7 +239,6 @@ function LineageSection({ detail }: { detail: ActivityRecordDetail }) {
             <span className="lineage-value">system (auto)</span>
           </div>
 
-          {/* Historical calcs */}
           {detail.calculations.length > 1 && (
             <>
               <div className="drawer-section-title" style={{ marginTop: 12 }}>Calculation history</div>
@@ -148,6 +277,8 @@ function LineageSection({ detail }: { detail: ActivityRecordDetail }) {
   );
 }
 
+// ---- Audit trail section ----------------------------------------------------
+
 function AuditTrail({ recordId }: { recordId: string }) {
   const { data: revisions, isLoading } = useRecordRevisions(recordId);
   if (isLoading) return <div className="spinner" />;
@@ -164,12 +295,15 @@ function AuditTrail({ recordId }: { recordId: string }) {
           </span>
           <span className="lineage-value">
             {r.field_name}: {r.old_value ?? 'null'} &rarr; {r.new_value ?? 'null'}
+            {r.change_reason ? <span style={{ color: 'var(--color-ink-tertiary)', display: 'block', fontSize: 11 }}>{r.change_reason}</span> : null}
           </span>
         </div>
       ))}
     </div>
   );
 }
+
+// ---- Drawer root ------------------------------------------------------------
 
 export default function LineageDrawer({ recordId, onClose }: { recordId: string; onClose: () => void }) {
   const { data: detail, isLoading } = useRecordLineage(recordId);
@@ -185,6 +319,9 @@ export default function LineageDrawer({ recordId, onClose }: { recordId: string;
               <div className="text-sm text-subtle mt-1">
                 {new Date(detail.activity_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}
                 {detail.subcategory ? ` · ${detail.subcategory}` : ''}
+                {detail.state === 'locked' && (
+                  <span className="badge badge-locked" style={{ marginLeft: 8, verticalAlign: 'middle' }}>LOCKED</span>
+                )}
               </div>
             )}
           </div>
@@ -200,7 +337,7 @@ export default function LineageDrawer({ recordId, onClose }: { recordId: string;
             <div className="empty-state"><div className="spinner" style={{ width: 28, height: 28 }} /></div>
           ) : detail ? (
             <>
-              <LineageSection detail={detail} />
+              <LineageSection detail={detail} recordId={recordId} />
               <AuditTrail recordId={recordId} />
             </>
           ) : (

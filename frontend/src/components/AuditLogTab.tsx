@@ -1,6 +1,6 @@
 import { useAuditLog } from '../api/hooks';
 
-export default function AuditLogTab() {
+export default function AuditLogTab({ onOpenRecord }: { onOpenRecord?: (id: string) => void }) {
   const { data: revisions, isLoading } = useAuditLog();
 
   if (isLoading) return <div className="empty-state"><div className="spinner" style={{ width: 28, height: 28 }} /></div>;
@@ -25,11 +25,17 @@ export default function AuditLogTab() {
             <th>Field</th>
             <th>Old value</th>
             <th>New value</th>
+            <th>Reason</th>
           </tr>
         </thead>
         <tbody>
           {revisions.map((r) => (
-            <tr key={r.id}>
+            <tr
+              key={r.id}
+              onClick={() => r.activity_record_id && onOpenRecord?.(r.activity_record_id)}
+              style={{ cursor: onOpenRecord ? 'pointer' : 'default' }}
+              title={onOpenRecord && r.activity_record_id ? 'Click to open record' : undefined}
+            >
               <td className="font-mono text-sm">
                 {new Date(r.changed_at).toLocaleString()}
               </td>
@@ -39,6 +45,7 @@ export default function AuditLogTab() {
               </td>
               <td className="font-mono text-sm text-subtle">{r.old_value ?? '--'}</td>
               <td className="font-mono text-sm" style={{ color: 'var(--color-ink)' }}>{r.new_value ?? '--'}</td>
+              <td className="text-xs text-subtle">{r.change_reason || '--'}</td>
             </tr>
           ))}
         </tbody>

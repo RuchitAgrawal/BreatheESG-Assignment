@@ -136,7 +136,7 @@ class RecordRevisionSerializer(serializers.ModelSerializer):
     class Meta:
         model = RecordRevision
         fields = [
-            "id", "field_name", "old_value", "new_value",
+            "id", "activity_record_id", "field_name", "old_value", "new_value",
             "change_reason", "changed_at", "changed_by_email",
         ]
 

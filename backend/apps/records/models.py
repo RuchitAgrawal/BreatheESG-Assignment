@@ -137,16 +137,29 @@ class ActivityRecord(models.Model):
                 f"Cannot lock a record in state '{self.state}'. Must be 'approved' first."
             )
         from django.utils import timezone
-        self.state = "locked"
-        self.locked_by = user
-        self.locked_at = timezone.now()
-        # Skip the locked check in save() -- this is the intentional lock action
-        # We call super().save() directly to avoid circular check
+        now = timezone.now()
+        # Use QuerySet.update() to bypass the locked-state save() check.
+        # This is the intentional lock transition, not a blocked edit.
         ActivityRecord.objects.filter(pk=self.pk).update(
             state="locked",
             locked_by=user,
-            locked_at=timezone.now(),
+            locked_at=now,
         )
+        # Update in-memory state so callers see the new state immediately
+        self.state = "locked"
+        self.locked_by = user
+        self.locked_at = now
+        # Write the audit trail entry manually because QuerySet.update()
+        # bypasses the post_save signal. Without this, lock events are
+        # invisible in the RecordRevision log.
+        RecordRevision(
+            activity_record=self,
+            changed_by=user,
+            field_name="state",
+            old_value="approved",
+            new_value="locked",
+            change_reason="Lock for audit",
+        ).save()
 
 
 # ---- RecordRevision (append-only audit log) ---------------------------------

@@ -108,6 +108,7 @@ export interface ActivityRecordDetail extends ActivityRecord {
 
 export interface RecordRevision {
   id: string;
+  activity_record_id: string | null;
   field_name: string;
   old_value: string | null;
   new_value: string | null;

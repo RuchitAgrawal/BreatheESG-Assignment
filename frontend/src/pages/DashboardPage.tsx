@@ -199,7 +199,7 @@ export default function DashboardPage() {
         </div>
 
         {activeTab === 'audit' ? (
-          <AuditLogTab />
+          <AuditLogTab onOpenRecord={(id) => setActiveDrawerId(id)} />
         ) : (
           <>
             {/* Filter bar */}
@@ -223,6 +223,33 @@ export default function DashboardPage() {
                 <option value="utility">Utility</option>
                 <option value="travel">Travel</option>
               </select>
+              <input
+                id="filter-date-from"
+                type="date"
+                className="filter-select"
+                style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}
+                value={filters.date_from ?? ''}
+                onChange={(e) => setFilter('date_from', e.target.value)}
+                title="Activity date from"
+              />
+              <input
+                id="filter-date-to"
+                type="date"
+                className="filter-select"
+                style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}
+                value={filters.date_to ?? ''}
+                onChange={(e) => setFilter('date_to', e.target.value)}
+                title="Activity date to"
+              />
+              {(filters.date_from || filters.date_to) && (
+                <button
+                  className="btn btn-ghost btn-sm"
+                  style={{ fontSize: 11 }}
+                  onClick={() => setFilters((f) => ({ ...f, date_from: undefined, date_to: undefined }))}
+                >
+                  Clear dates
+                </button>
+              )}
               <span className="filter-count">{totalCount} records</span>
             </div>
 
