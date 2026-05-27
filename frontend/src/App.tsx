@@ -12,9 +12,11 @@ const qc = new QueryClient({
   },
 });
 
-function RequireAuth({ children }: { children: JSX.Element }) {
+import React from 'react';
+
+function RequireAuth({ children }: { children: React.ReactNode }) {
   const { accessToken } = useAuthStore();
-  return accessToken ? children : <Navigate to="/login" replace />;
+  return accessToken ? <>{children}</> : <Navigate to="/login" replace />;
 }
 
 export default function App() {

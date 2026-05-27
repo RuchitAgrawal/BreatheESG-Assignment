@@ -22,7 +22,7 @@ function EditQuantityForm({
   const [reason, setReason] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-  const qc = useQC();
+  const qc = useQueryClient();
 
   async function handleSave() {
     const num = parseFloat(value);

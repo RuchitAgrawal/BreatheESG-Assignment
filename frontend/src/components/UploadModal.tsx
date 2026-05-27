@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 export default function UploadModal({
   onClose, onSuccess, onError, ingestSAP, ingestUtility, ingestTravel,

@@ -1,12 +1,12 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   useMe, useSourceFiles, useRecords,
   useBulkApprove, useIngestSAP, useIngestUtility, useIngestTravel,
 } from '../api/hooks';
 import { useAuthStore } from '../store/auth';
-import type { ActivityRecord, SourceFile, RecordFilters } from '../api/hooks';
-import type { SourceType } from '../api/types';
+import type { RecordFilters } from '../api/hooks';
+import type { SourceType, ActivityRecord } from '../api/types';
 import LineageDrawer from '../components/LineageDrawer';
 import LockModal from '../components/LockModal';
 import UploadModal from '../components/UploadModal';
