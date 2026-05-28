@@ -268,6 +268,9 @@ export default function DashboardPage() {
                 placeholderText="Date from"
                 dateFormat="dd-MMM-yyyy"
                 isClearable
+                showMonthDropdown
+                showYearDropdown
+                dropdownMode="select"
               />
               <DatePicker
                 selected={parseYYYYMMDD(filters.date_to)}
@@ -276,6 +279,9 @@ export default function DashboardPage() {
                 placeholderText="Date to"
                 dateFormat="dd-MMM-yyyy"
                 isClearable
+                showMonthDropdown
+                showYearDropdown
+                dropdownMode="select"
               />
               {(Object.keys(filters).length > 0) && (
                 <button

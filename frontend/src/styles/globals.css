@@ -979,3 +979,37 @@ input, textarea, select { font-family: inherit; }
 .react-datepicker__close-icon {
   padding: 0 8px 0 0 !important;
 }
+
+/* Month/Year Dropdown overrides */
+.react-datepicker__header__dropdown {
+  margin-top: 4px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.react-datepicker__month-select,
+.react-datepicker__year-select {
+  background-color: var(--color-surface-3) !important;
+  color: var(--color-ink) !important;
+  border: 1px solid var(--color-hairline-strong) !important;
+  border-radius: var(--radius-1) !important;
+  padding: 2px 4px !important;
+  font-size: 13px !important;
+  outline: none !important;
+  cursor: pointer !important;
+}
+
+.react-datepicker__month-select:hover,
+.react-datepicker__year-select:hover {
+  border-color: var(--color-hairline-tertiary) !important;
+}
+
+/* Navigation arrows */
+.react-datepicker__navigation-icon::before {
+  border-color: var(--color-ink-subtle) !important;
+}
+.react-datepicker__navigation:hover .react-datepicker__navigation-icon::before {
+  border-color: var(--color-ink) !important;
+}
