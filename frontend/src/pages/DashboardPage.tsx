@@ -16,6 +16,8 @@ import CustomSelect from '../components/CustomSelect';
 import CustomCheckbox from '../components/CustomCheckbox';
 import SkeletonRow from '../components/SkeletonRow';
 import { Database, Zap, Plane, Inbox } from 'lucide-react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const SOURCE_ICONS: Record<SourceType, React.ReactNode> = { sap: <Database size={12} />, utility: <Zap size={12} />, travel: <Plane size={12} /> };
 
@@ -52,6 +54,18 @@ function formatDate(s: string) {
 
 function formatCategory(cat: string) {
   return cat.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function toYYYYMMDD(d: Date | null): string {
+  if (!d) return '';
+  const tzOffset = d.getTimezoneOffset() * 60000;
+  return new Date(d.getTime() - tzOffset).toISOString().split('T')[0];
+}
+
+function parseYYYYMMDD(s?: string): Date | null {
+  if (!s) return null;
+  const [y, m, d] = s.split('-');
+  return new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
 }
 
 export default function DashboardPage() {
@@ -247,21 +261,21 @@ export default function DashboardPage() {
                   { value: 'travel', label: 'Travel' }
                 ]}
               />
-              <input
-                id="filter-date-from"
-                type="date"
+              <DatePicker
+                selected={parseYYYYMMDD(filters.date_from)}
+                onChange={(date: Date | null) => setFilter('date_from', toYYYYMMDD(date))}
                 className="custom-date-input"
-                value={filters.date_from ?? ''}
-                onChange={(e) => setFilter('date_from', e.target.value)}
-                title="Activity date from"
+                placeholderText="Date from"
+                dateFormat="dd-MMM-yyyy"
+                isClearable
               />
-              <input
-                id="filter-date-to"
-                type="date"
+              <DatePicker
+                selected={parseYYYYMMDD(filters.date_to)}
+                onChange={(date: Date | null) => setFilter('date_to', toYYYYMMDD(date))}
                 className="custom-date-input"
-                value={filters.date_to ?? ''}
-                onChange={(e) => setFilter('date_to', e.target.value)}
-                title="Activity date to"
+                placeholderText="Date to"
+                dateFormat="dd-MMM-yyyy"
+                isClearable
               />
               {(Object.keys(filters).length > 0) && (
                 <button

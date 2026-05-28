@@ -11,9 +11,11 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.100.14",
+    "@types/react-datepicker": "^6.2.0",
     "axios": "^1.16.1",
     "lucide-react": "^1.17.0",
     "react": "^19.2.6",
+    "react-datepicker": "^9.1.0",
     "react-dom": "^19.2.6",
     "react-router-dom": "^7.15.1",
     "zustand": "^5.0.13"
