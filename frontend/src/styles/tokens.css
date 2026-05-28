@@ -6,14 +6,14 @@
 
 :root {
   /* Canvas and surfaces */
-  --color-canvas:     #ffffff;
-  --color-canvas-soft: #fafafa;
-  --color-canvas-night: #1c1c1c;
-  --color-canvas-night-soft: #202020;
+  --color-canvas:     #121212;
+  --color-canvas-soft: #1c1c1c;
+  --color-canvas-night: #0a0a0a;
+  --color-canvas-night-soft: #141414;
   
   /* Supabase Dark Mode Overrides (since the original site is dark) */
   --color-surface-1:  #1c1c1c;
-  --color-surface-2:  #202020;
+  --color-surface-2:  #242424;
   --color-surface-3:  #2a2a2a;
   --color-surface-4:  #333333;
 
