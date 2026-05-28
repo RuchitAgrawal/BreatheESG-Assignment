@@ -74,7 +74,12 @@ export default function DashboardPage() {
   const ingestTravel = useIngestTravel();
 
   function setFilter(key: keyof RecordFilters, val: string) {
-    setFilters((f) => ({ ...f, [key]: val || undefined }));
+    setFilters((f) => ({ ...f, [key]: val || undefined, page: 1 }));
+    setSelectedIds(new Set());
+  }
+
+  function setPage(page: number) {
+    setFilters((f) => ({ ...f, page }));
     setSelectedIds(new Set());
   }
 
@@ -301,6 +306,31 @@ export default function DashboardPage() {
                 </table>
               )}
             </div>
+
+            {/* Pagination Controls */}
+            {totalCount > 0 && (
+              <div className="flex items-center justify-between" style={{ padding: '12px 16px', borderTop: '1px solid var(--color-hairline)', background: 'var(--color-surface-1)' }}>
+                <div className="text-sm text-subtle">
+                  Showing page {filters.page || 1}
+                </div>
+                <div className="flex gap-2">
+                  <button 
+                    className="btn btn-ghost btn-sm" 
+                    disabled={!recordsData?.previous} 
+                    onClick={() => setPage((filters.page || 1) - 1)}
+                  >
+                    Previous
+                  </button>
+                  <button 
+                    className="btn btn-ghost btn-sm" 
+                    disabled={!recordsData?.next} 
+                    onClick={() => setPage((filters.page || 1) + 1)}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Bulk action bar */}
             {selectedIds.size > 0 && (

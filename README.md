@@ -4,8 +4,8 @@ ESG data ingestion and analyst review system. Accepts SAP flat file exports, uti
 
 ## Demo
 
-**Frontend:** http://localhost:5173
-**API:** http://localhost:8000/api/v1/
+**Frontend:** https://breathe-esg-assignment-azure.vercel.app/
+**API:** https://breatheesg-assignment-production.up.railway.app/api/v1/health/
 
 | Email | Password | Organization | State |
 |-------|----------|-------------|-------|

@@ -182,6 +182,8 @@ Two approaches to data isolation in a multi-tenant system:
 
 ORM-level filtering via `TenantQuerySet` and `TenantManager`. The `for_org(org)` method is the only entry point for all application queries. Views call it explicitly. It is tested by the seed command which verifies that Acme records are not visible to Globex.
 
+Crucially, because this filtering happens at the base queryset level, any attempt by an authenticated user from Tenant A to access a record belonging to Tenant B (e.g. via direct ID access `GET /api/v1/records/<tenant-b-id>/`) will return a `404 Not Found` rather than a `403 Forbidden`. This is a strong security property that prevents cross-tenant ID enumeration attacks.
+
 **Rationale**
 
 RLS requires PostgreSQL-specific configuration and changes the `settings.py` connection setup (database-level session variables). For a prototype on Railway with SQLite in dev, RLS is impractical. The ORM approach is auditable from the code: you can grep for `for_org` to find every data access point.

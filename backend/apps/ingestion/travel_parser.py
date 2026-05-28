@@ -225,22 +225,17 @@ def parse_ground_segment(seg: dict, trip_id: str, traveler: str, seg_idx: int) -
                else "ground_transport_car"
 
     if distance_km is None:
-        notes.append({
-            "code": "DISTANCE_MISSING",
-            "severity": "red",
-            "message": (
-                "distance_km not provided for ground transport segment. "
-                "Great-circle calc not applicable (ground routes are not straight lines). "
-                "Needs human review to enter actual distance."
-            ),
-        })
-        distance_km = 0
+        return SegmentResult(
+            status="failed",
+            error="Distance missing. Ground transport segments must include distance_km.",
+            trip_id=trip_id,
+        )
 
     city_from = seg.get("pickup_location", seg.get("from", ""))
     city_to = seg.get("dropoff_location", seg.get("to", ""))
 
     return SegmentResult(
-        status="ok" if float(distance_km) > 0 else "ok",  # keep as ok, let quality tier handle
+        status="ok",
         trip_id=trip_id,
         traveler_email=traveler,
         segment_index=seg_idx,

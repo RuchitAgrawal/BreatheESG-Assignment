@@ -1,42 +1,46 @@
 /* ============================================================
-   Design tokens -- Linear-inspired dark design system
-   Source: Linear DESIGN.md (project reference)
+   Design tokens -- Supabase-inspired dark design system
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
   /* Canvas and surfaces */
-  --color-canvas:     #010102;
-  --color-surface-1:  #0f1011;
-  --color-surface-2:  #141516;
-  --color-surface-3:  #18191a;
-  --color-surface-4:  #1e1f21;
+  --color-canvas:     #ffffff;
+  --color-canvas-soft: #fafafa;
+  --color-canvas-night: #1c1c1c;
+  --color-canvas-night-soft: #202020;
+  
+  /* Supabase Dark Mode Overrides (since the original site is dark) */
+  --color-surface-1:  #1c1c1c;
+  --color-surface-2:  #202020;
+  --color-surface-3:  #2a2a2a;
+  --color-surface-4:  #333333;
 
   /* Borders */
-  --color-hairline:          #23252a;
-  --color-hairline-strong:   #34343a;
-  --color-hairline-tertiary: #3e3e44;
+  --color-hairline:          #2e2e2e;
+  --color-hairline-strong:   #3e3e3e;
+  --color-hairline-tertiary: #4a4a4a;
 
   /* Text */
-  --color-ink:          #f7f8f8;
-  --color-ink-muted:    #d0d6e0;
-  --color-ink-subtle:   #8a8f98;
-  --color-ink-tertiary: #62666d;
+  --color-ink:          #ffffff;
+  --color-ink-muted:    #b2b2b2;
+  --color-ink-subtle:   #9a9a9a;
+  --color-ink-tertiary: #707070;
 
-  /* Accent -- Linear lavender */
-  --color-primary:       #5e6ad2;
-  --color-primary-hover: #828fff;
-  --color-primary-focus: #5e69d1;
-  --color-primary-dim:   rgba(94, 106, 210, 0.15);
+  /* Accent -- Supabase Emerald */
+  --color-primary:       #3ecf8e;
+  --color-primary-hover: #4ade80;
+  --color-primary-focus: #24b47e;
+  --color-primary-dim:   rgba(62, 207, 142, 0.15);
 
-  /* Semantic -- not in Linear spec, added for ESG quality tiers */
-  --color-success:     #27a644;
-  --color-success-dim: rgba(39, 166, 68, 0.15);
-  --color-warning:     #d97706;
-  --color-warning-dim: rgba(217, 119, 6, 0.15);
-  --color-danger:      #dc2626;
-  --color-danger-dim:  rgba(220, 38, 38, 0.15);
+  /* Semantic */
+  --color-success:     #3ecf8e;
+  --color-success-dim: rgba(62, 207, 142, 0.15);
+  --color-warning:     #ffdb13;
+  --color-warning-dim: rgba(255, 219, 19, 0.15);
+  --color-danger:      #e2005a;
+  --color-danger-dim:  rgba(226, 0, 90, 0.15);
 
   /* Typography */
   --font-display: 'Inter', 'SF Pro Display', -apple-system, system-ui, sans-serif;
@@ -44,15 +48,15 @@
   --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
   /* Spacing */
-  --space-1:  4px;
-  --space-2:  8px;
-  --space-3:  12px;
-  --space-4:  16px;
-  --space-5:  20px;
+  --space-1:  2px;
+  --space-2:  4px;
+  --space-3:  8px;
+  --space-4:  12px;
+  --space-5:  16px;
   --space-6:  24px;
   --space-8:  32px;
-  --space-10: 40px;
-  --space-12: 48px;
+  --space-10: 48px;
+  --space-12: 64px;
 
   /* Radius */
   --radius-1: 4px;
