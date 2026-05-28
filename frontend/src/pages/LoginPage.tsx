@@ -43,15 +43,15 @@ export default function LoginPage() {
   return (
     <div className="login-page">
       <div className="login-card">
-        <p className="login-eyebrow">Analyst Portal</p>
-        <h1 className="login-title">BreatheESG</h1>
+        <div className="login-logo">B</div>
+        <h1 className="login-title">Welcome to BreatheESG</h1>
         <p className="login-subtitle">
-          ESG data ingestion and review platform
+          Sign in to access the analyst portal
         </p>
 
         <form className="login-form" onSubmit={handleLogin}>
           <div className="form-group">
-            <label className="form-label" htmlFor="email">Email</label>
+            <label className="form-label" htmlFor="email">Email address</label>
             <input
               id="email"
               type="email"
@@ -71,7 +71,7 @@ export default function LoginPage() {
               className="form-input"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
+              placeholder="••••••••"
               autoComplete="current-password"
               required
             />
@@ -80,7 +80,7 @@ export default function LoginPage() {
           <button
             id="btn-login"
             type="submit"
-            className="btn btn-primary btn-lg w-full"
+            className="btn btn-primary btn-lg w-full flex justify-center mt-2"
             disabled={loading}
           >
             {loading ? <span className="spinner" /> : null}
@@ -88,8 +88,11 @@ export default function LoginPage() {
           </button>
         </form>
 
+        <div className="login-divider">
+          <span>Or continue with a demo account</span>
+        </div>
+
         <div className="demo-creds">
-          <p className="demo-creds-title">Demo accounts (click to fill)</p>
           {DEMO_ACCOUNTS.map((a) => (
             <div
               key={a.email}
@@ -97,8 +100,8 @@ export default function LoginPage() {
               onClick={() => fillDemo(a)}
               title={`Login as ${a.org}`}
             >
-              <span>{a.email}</span>
-              <span style={{ color: 'var(--color-ink-tertiary)', fontSize: '11px' }}>{a.org}</span>
+              <span className="font-mono">{a.email}</span>
+              <span style={{ color: 'var(--color-ink-subtle)', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>{a.org}</span>
             </div>
           ))}
         </div>

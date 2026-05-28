@@ -14,8 +14,10 @@ import AuditLogTab from '../components/AuditLogTab';
 import Toast, { useToast } from '../components/Toast';
 import CustomSelect from '../components/CustomSelect';
 import CustomCheckbox from '../components/CustomCheckbox';
+import SkeletonRow from '../components/SkeletonRow';
+import { Database, Zap, Plane, Inbox } from 'lucide-react';
 
-const SOURCE_ICONS: Record<SourceType, string> = { sap: 'SAP', utility: 'UTL', travel: 'TRV' };
+const SOURCE_ICONS: Record<SourceType, React.ReactNode> = { sap: <Database size={12} />, utility: <Zap size={12} />, travel: <Plane size={12} /> };
 
 function StateBadge({ state }: { state: string }) {
   const cls = {
@@ -275,38 +277,47 @@ export default function DashboardPage() {
 
             {/* Table */}
             <div style={{ flex: 1, overflowY: 'auto', position: 'relative' }}>
-              {isLoading ? (
-                <div className="empty-state">
-                  <div className="spinner" style={{ width: 28, height: 28 }} />
-                </div>
-              ) : records.length === 0 ? (
-                <div className="empty-state">
-                  <div className="empty-state-icon">📭</div>
-                  <div className="empty-state-title">No records found</div>
-                  <div className="empty-state-desc">Try adjusting your filters or upload data from the sidebar.</div>
-                </div>
-              ) : (
-                <table className="data-table">
-                  <thead>
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th className="col-check">
+                      <CustomCheckbox
+                        checked={selectedIds.size === records.length && records.length > 0}
+                        onChange={toggleAll}
+                      />
+                    </th>
+                    <th className="col-quality">Q</th>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Quantity</th>
+                    <th>CO2e</th>
+                    <th className="col-scope">Scope</th>
+                    <th>Source</th>
+                    <th className="col-state">State</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {isLoading ? (
+                    <>
+                      <SkeletonRow />
+                      <SkeletonRow />
+                      <SkeletonRow />
+                      <SkeletonRow />
+                      <SkeletonRow />
+                      <SkeletonRow />
+                    </>
+                  ) : records.length === 0 ? (
                     <tr>
-                      <th className="col-check">
-                        <CustomCheckbox
-                          checked={selectedIds.size === records.length && records.length > 0}
-                          onChange={toggleAll}
-                        />
-                      </th>
-                      <th className="col-quality">Q</th>
-                      <th>Date</th>
-                      <th>Category</th>
-                      <th>Quantity</th>
-                      <th>CO2e</th>
-                      <th className="col-scope">Scope</th>
-                      <th>Source</th>
-                      <th className="col-state">State</th>
+                      <td colSpan={9} style={{ padding: 0 }}>
+                        <div className="empty-state">
+                          <div className="empty-state-icon"><Inbox size={48} strokeWidth={1} /></div>
+                          <div className="empty-state-title">No records found</div>
+                          <div className="empty-state-desc">Try adjusting your filters or upload data from the sidebar.</div>
+                        </div>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {records.map((rec) => (
+                  ) : (
+                    records.map((rec) => (
                       <RecordRow
                         key={rec.id}
                         record={rec}
@@ -314,10 +325,10 @@ export default function DashboardPage() {
                         onSelect={() => toggleSelect(rec.id)}
                         onOpen={() => setActiveDrawerId(rec.id)}
                       />
-                    ))}
-                  </tbody>
-                </table>
-              )}
+                    ))
+                  )}
+                </tbody>
+              </table>
             </div>
 
             {/* Pagination Controls */}
