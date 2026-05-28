@@ -68,6 +68,48 @@ function parseYYYYMMDD(s?: string): Date | null {
   return new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
 }
 
+const CURRENT_YEAR = new Date().getFullYear();
+const YEARS = Array.from({ length: 15 }, (_, i) => (CURRENT_YEAR - i).toString());
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+function CustomHeader({ date, changeYear, changeMonth, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }: any) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 6, margin: '8px 4px 16px 4px' }}>
+      <button 
+        onClick={decreaseMonth} 
+        disabled={prevMonthButtonDisabled} 
+        className="btn btn-ghost" 
+        style={{ padding: '4px 6px', minHeight: 0, height: 28 }}
+      >
+        <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" /></svg>
+      </button>
+      <CustomSelect
+        value={MONTHS[date.getMonth()]}
+        onChange={(val) => changeMonth(MONTHS.indexOf(val))}
+        options={MONTHS.map(m => ({ value: m, label: m.substring(0, 3) }))}
+        className="date-select"
+      />
+      <CustomSelect
+        value={date.getFullYear().toString()}
+        onChange={(val) => changeYear(parseInt(val))}
+        options={YEARS.map(y => ({ value: y, label: y }))}
+        className="date-select"
+      />
+      <button 
+        onClick={increaseMonth} 
+        disabled={nextMonthButtonDisabled} 
+        className="btn btn-ghost" 
+        style={{ padding: '4px 6px', minHeight: 0, height: 28 }}
+      >
+        <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" /></svg>
+      </button>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const { logout } = useAuthStore();
   const navigate = useNavigate();
@@ -268,9 +310,8 @@ export default function DashboardPage() {
                 placeholderText="Date from"
                 dateFormat="dd-MMM-yyyy"
                 isClearable
-                showMonthDropdown
-                showYearDropdown
-                dropdownMode="select"
+                maxDate={new Date()}
+                renderCustomHeader={CustomHeader}
               />
               <DatePicker
                 selected={parseYYYYMMDD(filters.date_to)}
@@ -279,9 +320,8 @@ export default function DashboardPage() {
                 placeholderText="Date to"
                 dateFormat="dd-MMM-yyyy"
                 isClearable
-                showMonthDropdown
-                showYearDropdown
-                dropdownMode="select"
+                maxDate={new Date()}
+                renderCustomHeader={CustomHeader}
               />
               {(Object.keys(filters).length > 0) && (
                 <button

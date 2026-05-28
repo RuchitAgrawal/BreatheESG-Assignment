@@ -11,9 +11,10 @@ interface CustomSelectProps {
   options: Option[];
   onChange: (value: string) => void;
   placeholder?: string;
+  className?: string;
 }
 
-export default function CustomSelect({ id, value, options, onChange, placeholder = 'Select...' }: CustomSelectProps) {
+export default function CustomSelect({ id, value, options, onChange, placeholder = 'Select...', className = '' }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -30,7 +31,7 @@ export default function CustomSelect({ id, value, options, onChange, placeholder
   const selectedOption = options.find((o) => o.value === value);
 
   return (
-    <div className="custom-select-container" ref={ref}>
+    <div className={`custom-select-container ${className}`} ref={ref}>
       <div 
         id={id}
         className={`custom-select-trigger ${isOpen ? 'open' : ''}`}

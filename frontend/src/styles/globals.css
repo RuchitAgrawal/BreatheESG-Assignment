@@ -984,13 +984,14 @@ input, textarea, select { font-family: inherit; }
   padding: 0 8px 0 0 !important;
 }
 
-/* Month/Year Dropdown overrides */
-.react-datepicker__header__dropdown {
-  margin-top: 4px;
-  margin-bottom: 8px;
-  display: flex;
-  justify-content: center;
-  gap: 8px;
+/* Custom Select in Datepicker Header */
+.date-select {
+  min-width: 64px !important;
+}
+
+.date-select .custom-select-trigger {
+  padding: 4px 8px;
+  font-size: 12px;
 }
 
 .react-datepicker__month-select,
