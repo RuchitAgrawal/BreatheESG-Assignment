@@ -12,6 +12,8 @@ import LockModal from '../components/LockModal';
 import UploadModal from '../components/UploadModal';
 import AuditLogTab from '../components/AuditLogTab';
 import Toast, { useToast } from '../components/Toast';
+import CustomSelect from '../components/CustomSelect';
+import CustomCheckbox from '../components/CustomCheckbox';
 
 const SOURCE_ICONS: Record<SourceType, string> = { sap: 'SAP', utility: 'UTL', travel: 'TRV' };
 
@@ -209,30 +211,44 @@ export default function DashboardPage() {
           <>
             {/* Filter bar */}
             <div className="filter-bar">
-              <select id="filter-state" className="filter-select" value={filters.state ?? ''} onChange={(e) => setFilter('state', e.target.value)}>
-                <option value="">All states</option>
-                <option value="ingested">Ingested</option>
-                <option value="needs_review">Needs Review</option>
-                <option value="approved">Approved</option>
-                <option value="locked">Locked</option>
-              </select>
-              <select id="filter-quality" className="filter-select" value={filters.quality_tier ?? ''} onChange={(e) => setFilter('quality_tier', e.target.value)}>
-                <option value="">All quality</option>
-                <option value="green">Green</option>
-                <option value="yellow">Yellow</option>
-                <option value="red">Red</option>
-              </select>
-              <select id="filter-source" className="filter-select" value={filters.source_type ?? ''} onChange={(e) => setFilter('source_type', e.target.value)}>
-                <option value="">All sources</option>
-                <option value="sap">SAP</option>
-                <option value="utility">Utility</option>
-                <option value="travel">Travel</option>
-              </select>
+              <CustomSelect
+                id="filter-state"
+                value={filters.state ?? ''}
+                onChange={(val) => setFilter('state', val)}
+                options={[
+                  { value: '', label: 'All states' },
+                  { value: 'ingested', label: 'Ingested' },
+                  { value: 'needs_review', label: 'Needs Review' },
+                  { value: 'approved', label: 'Approved' },
+                  { value: 'locked', label: 'Locked' }
+                ]}
+              />
+              <CustomSelect
+                id="filter-quality"
+                value={filters.quality_tier ?? ''}
+                onChange={(val) => setFilter('quality_tier', val)}
+                options={[
+                  { value: '', label: 'All quality' },
+                  { value: 'green', label: 'Green' },
+                  { value: 'yellow', label: 'Yellow' },
+                  { value: 'red', label: 'Red' }
+                ]}
+              />
+              <CustomSelect
+                id="filter-source"
+                value={filters.source_type ?? ''}
+                onChange={(val) => setFilter('source_type', val)}
+                options={[
+                  { value: '', label: 'All sources' },
+                  { value: 'sap', label: 'SAP' },
+                  { value: 'utility', label: 'Utility' },
+                  { value: 'travel', label: 'Travel' }
+                ]}
+              />
               <input
                 id="filter-date-from"
                 type="date"
-                className="filter-select"
-                style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}
+                className="custom-date-input"
                 value={filters.date_from ?? ''}
                 onChange={(e) => setFilter('date_from', e.target.value)}
                 title="Activity date from"
@@ -240,19 +256,18 @@ export default function DashboardPage() {
               <input
                 id="filter-date-to"
                 type="date"
-                className="filter-select"
-                style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}
+                className="custom-date-input"
                 value={filters.date_to ?? ''}
                 onChange={(e) => setFilter('date_to', e.target.value)}
                 title="Activity date to"
               />
-              {(filters.date_from || filters.date_to) && (
+              {(Object.keys(filters).length > 0) && (
                 <button
                   className="btn btn-ghost btn-sm"
                   style={{ fontSize: 11 }}
-                  onClick={() => setFilters((f) => ({ ...f, date_from: undefined, date_to: undefined }))}
+                  onClick={() => { setFilters({}); setSelectedIds(new Set()); }}
                 >
-                  Clear dates
+                  Reset filters
                 </button>
               )}
               <span className="filter-count">{totalCount} records</span>
@@ -275,9 +290,7 @@ export default function DashboardPage() {
                   <thead>
                     <tr>
                       <th className="col-check">
-                        <input
-                          type="checkbox"
-                          id="check-all"
+                        <CustomCheckbox
                           checked={selectedIds.size === records.length && records.length > 0}
                           onChange={toggleAll}
                         />
@@ -404,7 +417,7 @@ function RecordRow({
     <>
       <tr className={selected ? 'selected' : ''} onClick={onOpen}>
         <td className="col-check" onClick={(e) => { e.stopPropagation(); onSelect(); }}>
-          <input type="checkbox" checked={selected} onChange={onSelect} onClick={(e) => e.stopPropagation()} />
+          <CustomCheckbox checked={selected} onChange={onSelect} />
         </td>
         <td className="col-quality" onClick={(e) => { e.stopPropagation(); setExpanded((x) => !x); }}>
           <div className="flex items-center justify-center" style={{ gap: 4 }}>
