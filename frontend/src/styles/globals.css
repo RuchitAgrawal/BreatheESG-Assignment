@@ -919,6 +919,10 @@ input, textarea, select { font-family: inherit; }
    React DatePicker Dark Theme Overrides
    ============================================================ */
 
+.react-datepicker-popper {
+  z-index: 100 !important;
+}
+
 .react-datepicker-wrapper {
   display: inline-block;
 }
